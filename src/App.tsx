@@ -26,7 +26,9 @@ import {
   FileJson,
   MapPin,
   Shield,
-  BarChart3
+  BarChart3,
+  Menu,
+  X
 } from 'lucide-react';
 import type { ActionItem } from './lib/gemini';
 import { extractActionItems } from './lib/gemini';
@@ -366,6 +368,7 @@ const SettingsView = ({ apiKey, setApiKey, selectedModel, setSelectedModel, useM
 
 const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveView: (v: string) => void }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -376,7 +379,7 @@ const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveVi
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container flex-center" style={{ justifyContent: 'space-between' }}>
-        <div className="flex-center" style={{ gap: '0.8rem', cursor: 'pointer' }} onClick={() => setActiveView('home')}>
+        <div className="flex-center" style={{ gap: '0.8rem', cursor: 'pointer' }} onClick={() => { setActiveView('home'); setMenuOpen(false); }}>
           <div className="flex-center" style={{ width: 42, height: 42 }}>
             <Logo size={40} className="text-primary" />
           </div>
@@ -385,18 +388,19 @@ const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveVi
           </h1>
         </div>
 
-        <ul className="nav-links">
+        <ul className={`nav-links ${menuOpen ? 'mobile-show' : ''}`}>
           {[
             { id: 'home', label: 'Home', icon: <Info size={16} /> },
             { id: 'guide', label: 'How to Use', icon: <HelpCircle size={16} /> },
             { id: 'tool', label: 'Tool', icon: <Zap size={16} /> },
             { id: 'history', label: 'History', icon: <History size={16} /> },
             { id: 'contact', label: 'Contact', icon: <Mail size={16} /> },
+            { id: 'settings', label: 'Settings', icon: <Settings size={16} /> },
           ].map((v) => (
             <li
               key={v.id}
               className={`nav-link ${activeView === v.id ? 'active' : ''}`}
-              onClick={() => setActiveView(v.id)}
+              onClick={() => { setActiveView(v.id); setMenuOpen(false); }}
               style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
             >
               {v.icon}
@@ -406,8 +410,12 @@ const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveVi
         </ul>
 
         <div className="flex-center" style={{ gap: '1rem' }}>
-          <button className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} onClick={() => setActiveView('settings')}>
+          <button className="btn btn-outline settings-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} onClick={() => { setActiveView('settings'); setMenuOpen(false); }}>
             <Settings size={16} />
+          </button>
+
+          <button className="mobile-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
