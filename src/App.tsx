@@ -80,7 +80,7 @@ const Logo = ({ size = 32, className = "", style = {}, theme = "dark" }: { size?
   );
 };
 
-const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results, error, onFileUpload, summary }: any) => {
+const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results, error, onFileUpload, summary, theme }: any) => {
   const exportToCSV = () => {
     const headers = ["Task", "Owner", "Deadline", "Priority", "Status"];
     const rows = results.map((item: any) => [
@@ -856,6 +856,7 @@ function App() {
               error={error}
               onFileUpload={handleFileUpload}
               summary={summary}
+              theme={theme}
             />
           )}
           {activeView === 'history' && (
