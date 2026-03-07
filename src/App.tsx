@@ -28,7 +28,9 @@ import {
   Shield,
   BarChart3,
   Menu,
-  X
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 import type { ActionItem } from './lib/gemini';
 import { extractActionItems } from './lib/gemini';
@@ -41,36 +43,42 @@ const GUIDE_STEP_3 = "zerion_guide_step3_results_1772475515564.png";
 
 // --- COMPONENTS ---
 
-const Logo = ({ size = 32, className = "", style = {} }: { size?: number, className?: string, style?: any }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 100 100"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-    style={{ ...style, filter: 'drop-shadow(0 0 10px rgba(255, 140, 0, 0.4))' }}
-  >
-    <g transform="translate(50, 50)">
-      {[0, 60, 120, 180, 240, 300].map((angle) => (
-        <g key={angle} transform={`rotate(${angle})`}>
-          <path
-            d="M-4 -12 L4 -12 L6 -28 L0 -34 L-6 -28 Z"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinejoin="round"
-          />
-          <line x1="-3" y1="-18" x2="3" y2="-18" stroke="currentColor" strokeWidth="1.2" />
-          <line x1="0" y1="-12" x2="0" y2="-34" stroke="currentColor" strokeWidth="1.2" />
-          <path d="M4 -12 L10 0" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.4" />
-          <circle cx="0" cy="-38" r="3.2" fill="var(--background)" stroke="currentColor" strokeWidth="1.8" />
-        </g>
-      ))}
-      <circle cx="0" cy="0" r="6" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.8" />
-      <circle cx="0" cy="0" r="1.5" fill="currentColor" />
-    </g>
-  </svg>
-);
+const Logo = ({ size = 32, className = "", style = {}, theme = "dark" }: { size?: number, className?: string, style?: any, theme?: string }) => {
+  const brandShadow = theme === 'dark'
+    ? 'drop-shadow(0 0 10px rgba(255, 140, 0, 0.5))'
+    : 'drop-shadow(0 0 10px rgba(59, 130, 246, 0.4))';
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      style={{ ...style, filter: brandShadow }}
+    >
+      <g transform="translate(50, 50)">
+        {[0, 60, 120, 180, 240, 300].map((angle) => (
+          <g key={angle} transform={`rotate(${angle})`}>
+            <path
+              d="M-4 -12 L4 -12 L6 -28 L0 -34 L-6 -28 Z"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+            />
+            <line x1="-3" y1="-18" x2="3" y2="-18" stroke="currentColor" strokeWidth="1.2" />
+            <line x1="0" y1="-12" x2="0" y2="-34" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M4 -12 L10 0" stroke="currentColor" strokeWidth="1.2" strokeOpacity="0.4" />
+            <circle cx="0" cy="-38" r="3.2" fill="var(--background)" stroke="currentColor" strokeWidth="1.8" />
+          </g>
+        ))}
+        <circle cx="0" cy="0" r="6" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.8" />
+        <circle cx="0" cy="0" r="1.5" fill="currentColor" />
+      </g>
+    </svg>
+  );
+};
 
 const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results, error, onFileUpload, summary }: any) => {
   const exportToCSV = () => {
@@ -144,9 +152,9 @@ const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results,
           </div>
 
           {/* Tips Card */}
-          <div className="glass-panel" style={{ margin: '1rem', padding: '2rem', background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.1)' }}>
+          <div className="glass-panel" style={{ margin: '1rem', padding: '2rem', background: 'var(--card-bg)', border: '1px dashed var(--border-subtle)' }}>
             <h4 style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--primary)' }}>Pro Tips</h4>
-            <ul style={{ fontSize: '0.85rem', color: '#888', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <ul style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', paddingLeft: '1.2rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               <li>Ensure transcript includes speaker names for better ownership detection.</li>
               <li>Mention dates clearly (e.g., "by next Friday").</li>
               <li>Use the Gemini 2.5 Flash model in Settings for highest accuracy.</li>
@@ -207,24 +215,24 @@ const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results,
                         <tr key={idx} style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
                           <td style={{ padding: '1.2rem', fontWeight: 600, fontSize: '1.05rem', borderTopLeftRadius: '16px', borderBottomLeftRadius: '16px' }}>{item.task}</td>
                           <td style={{ padding: '1.2rem' }}>
-                            <span className="flex-center" style={{ justifyContent: 'flex-start', gap: '0.7rem', color: '#aaa' }}><User size={16} /> {item.owner}</span>
+                            <span className="flex-center" style={{ justifyContent: 'flex-start', gap: '0.7rem', color: 'var(--text-muted)' }}><User size={16} /> {item.owner}</span>
                           </td>
                           <td style={{ padding: '1.2rem' }}>
-                            <span className="flex-center" style={{ justifyContent: 'flex-start', gap: '0.7rem', color: '#aaa' }}><Clock size={16} /> {item.deadline}</span>
+                            <span className="flex-center" style={{ justifyContent: 'flex-start', gap: '0.7rem', color: 'var(--text-muted)' }}><Clock size={16} /> {item.deadline}</span>
                           </td>
                           <td style={{ padding: '1.2rem', width: '200px' }}>
-                            <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ width: '100%', height: '6px', background: 'var(--border-subtle)', borderRadius: '3px', overflow: 'hidden' }}>
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${(item.confidence || 0.85) * 100}%` }}
                                 style={{
                                   height: '100%',
                                   background: (item.confidence || 0.85) > 0.8 ? 'var(--secondary)' : 'var(--primary)',
-                                  boxShadow: '0 0 15px rgba(0, 242, 255, 0.4)'
+                                  boxShadow: (theme === 'dark' ? '0 0 15px rgba(0, 242, 255, 0.4)' : 'none')
                                 }}
                               />
                             </div>
-                            <div style={{ fontSize: '0.75rem', color: '#555', marginTop: '8px', fontWeight: 800 }}>{Math.round((item.confidence || 0.85) * 100)}% Match</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '8px', fontWeight: 800 }}>{Math.round((item.confidence || 0.85) * 100)}% Match</div>
                           </td>
                           <td style={{ padding: '1.2rem', borderTopRightRadius: '16px', borderBottomRightRadius: '16px' }}>
                             <span style={{
@@ -255,11 +263,11 @@ const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results,
                   </div>
                   <div>
                     <h3 style={{ fontSize: '1.5rem' }}>Ecosystem Connect</h3>
-                    <p style={{ color: '#888', fontSize: '0.95rem' }}>Push your intelligence data to the tools you use every day.</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Push your intelligence data to the tools you use every day.</p>
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                  <motion.button whileHover={{ scale: 1.02 }} className="btn btn-outline" style={{ padding: '1.8rem', justifyContent: 'center', background: 'rgba(255,255,255,0.02)' }}>
+                  <motion.button whileHover={{ scale: 1.02 }} className="btn btn-outline" style={{ padding: '1.8rem', justifyContent: 'center', background: 'var(--card-bg)' }}>
                     <Calendar size={20} /> Add to Google Calendar
                   </motion.button>
                   <motion.button whileHover={{ scale: 1.02 }} className="btn btn-outline" style={{ padding: '1.8rem', justifyContent: 'center', background: 'rgba(255,255,255,0.02)' }}>
@@ -278,7 +286,7 @@ const ExtractorView = ({ transcript, setTranscript, onProcess, loading, results,
   );
 };
 
-const SettingsView = ({ apiKey, setApiKey, selectedModel, setSelectedModel, useMockMode, setUseMockMode, customModel, setCustomModel }: any) => (
+const SettingsView = ({ apiKey, setApiKey, selectedModel, setSelectedModel, useMockMode, setUseMockMode, customModel, setCustomModel, theme, setTheme }: any) => (
   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container view-section" style={{ maxWidth: '800px' }}>
     <div className="glass-panel" style={{ padding: '2rem', margin: '1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
@@ -292,6 +300,25 @@ const SettingsView = ({ apiKey, setApiKey, selectedModel, setSelectedModel, useM
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Theme Section */}
+        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+              {theme === 'dark' ? <Moon size={18} className="text-primary" /> : <Sun size={18} className="text-primary" />}
+              Appearance Mode
+            </h4>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Switch between Dark and Light aesthetics.</p>
+          </div>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={theme === 'light'}
+              onChange={(e) => setTheme(e.target.checked ? 'light' : 'dark')}
+            />
+            <span className="slider"></span>
+          </label>
+        </div>
+
         {/* Simulation Section */}
         <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -366,7 +393,7 @@ const SettingsView = ({ apiKey, setApiKey, selectedModel, setSelectedModel, useM
 );
 
 
-const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveView: (v: string) => void }) => {
+const Navbar = ({ activeView, setActiveView, theme }: { activeView: string, setActiveView: (v: string) => void, theme: string }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -381,9 +408,9 @@ const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveVi
       <div className="container flex-center" style={{ justifyContent: 'space-between' }}>
         <div className="flex-center" style={{ gap: '0.8rem', cursor: 'pointer' }} onClick={() => { setActiveView('home'); setMenuOpen(false); }}>
           <div className="flex-center" style={{ width: 42, height: 42 }}>
-            <Logo size={40} className="text-primary" />
+            <Logo size={40} className="text-primary" theme={theme} />
           </div>
-          <h1 style={{ fontSize: '1.4rem' }}>
+          <h1 style={{ fontSize: '1.4rem', color: 'var(--text-primary)' }}>
             Zer<span className="gradient-text">ion</span>
           </h1>
         </div>
@@ -392,6 +419,7 @@ const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveVi
           {[
             { id: 'home', label: 'Home', icon: <Info size={16} /> },
             { id: 'guide', label: 'How to Use', icon: <HelpCircle size={16} /> },
+            { id: 'backend', label: 'BackEnd Works', icon: <Sparkles size={16} /> },
             { id: 'tool', label: 'Tool', icon: <Zap size={16} /> },
             { id: 'history', label: 'History', icon: <History size={16} /> },
             { id: 'contact', label: 'Contact', icon: <Mail size={16} /> },
@@ -423,7 +451,7 @@ const Navbar = ({ activeView, setActiveView }: { activeView: string, setActiveVi
   );
 };
 
-const HomeView = ({ onStart }: { onStart: () => void }) => (
+const HomeView = ({ onStart, theme }: { onStart: () => void, theme: string }) => (
   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
     <header className="hero container">
       <motion.div
@@ -431,7 +459,7 @@ const HomeView = ({ onStart }: { onStart: () => void }) => (
         animate={{ scale: 1, opacity: 1 }}
         style={{ marginBottom: '2rem' }}
       >
-        <Logo size={80} className="text-primary" style={{ margin: '0 auto' }} />
+        <Logo size={80} className="text-primary" theme={theme} style={{ margin: '0 auto' }} />
       </motion.div>
       <motion.h1 initial={{ y: 20 }} animate={{ y: 0 }}>
         AI-Powered <span className="gradient-text">Meeting Intelligence</span>.
@@ -464,9 +492,15 @@ const HomeView = ({ onStart }: { onStart: () => void }) => (
         ))}
       </div>
     </section>
+  </motion.div>
+);
 
-    <section className="container view-section" style={{ borderTop: '1px solid var(--glass-border)' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '4rem' }}>System Architecture</h2>
+const BackEndWorksView = () => (
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container view-section">
+    <h2 style={{ textAlign: 'center', marginBottom: '4rem' }}>BackEnd Works</h2>
+
+    <section>
+      <h3 style={{ textAlign: 'center', marginBottom: '3rem', color: 'var(--primary)' }}>System Architecture</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', width: '100%', maxWidth: '900px' }}>
 
@@ -498,39 +532,39 @@ const HomeView = ({ onStart }: { onStart: () => void }) => (
           <div style={{ color: 'var(--primary)', opacity: 0.5 }}>▼</div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', width: '100%' }}>
-            <motion.div whileHover={{ y: -5 }} className="glass-panel" style={{ padding: '2rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', border: '1px dashed var(--primary)' }}>
+            <motion.div whileHover={{ y: -5 }} className="glass-panel" style={{ padding: '2rem', textAlign: 'center', background: 'var(--card-bg)', border: '1px dashed var(--primary)' }}>
               <div className="gradient-text" style={{ fontSize: '0.8rem', fontWeight: 900 }}>PHASE 1: MVP</div>
               <h4 style={{ marginTop: '0.5rem' }}>Rule-Based Engine</h4>
-              <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: '#888' }}>Regex, Pattern Matching & Fallback committed verb analysis.</p>
+              <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>Regex, Pattern Matching & Fallback committed verb analysis.</p>
             </motion.div>
 
-            <motion.div whileHover={{ y: -5 }} className="glass-panel" style={{ padding: '2rem', textAlign: 'center', background: 'rgba(112, 0, 255, 0.05)', border: '2px solid var(--secondary)' }}>
+            <motion.div whileHover={{ y: -5 }} className="glass-panel" style={{ padding: '2rem', textAlign: 'center', background: 'var(--card-bg)', border: '2px solid var(--secondary)' }}>
               <div className="gradient-text" style={{ fontSize: '0.8rem', fontWeight: 900 }}>PHASE 2: ML DETECTION</div>
               <h4 style={{ marginTop: '0.5rem' }}>AI Intelligence</h4>
-              <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: '#888' }}>Prompt-based LLM (Gemini 2.5) for Context Logic & NER.</p>
+              <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>Prompt-based LLM (Gemini 2.5) for Context Logic & NER.</p>
             </motion.div>
           </div>
 
           {/* New: NLP Intelligence Details */}
-          <div className="glass-panel" style={{ width: '100%', padding: '2rem', marginTop: '1rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="glass-panel" style={{ width: '100%', padding: '2rem', marginTop: '1rem', border: '1px solid var(--border-subtle)' }}>
             <h4 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--primary)' }}>Intelligence Pipeline Components</h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
               <div style={{ textAlign: 'center' }}>
                 <div className="gradient-text" style={{ fontWeight: 800, fontSize: '0.8rem' }}>01. NER</div>
-                <p style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '0.5rem' }}>Detecting PERSON, DATE, & ORG entities.</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Detecting PERSON, DATE, & ORG entities.</p>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div className="gradient-text" style={{ fontWeight: 800, fontSize: '0.8rem' }}>02. DEP-PARSING</div>
-                <p style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '0.5rem' }}>Subject-Verb-Object (SVO) extraction.</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Subject-Verb-Object (SVO) extraction.</p>
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div className="gradient-text" style={{ fontWeight: 800, fontSize: '0.8rem' }}>03. COREFERENCE</div>
-                <p style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '0.5rem' }}>Resolving pronouns (e.g., "He" → Rahul).</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Resolving pronouns (e.g., "He" → Rahul).</p>
               </div>
             </div>
           </div>
           {/* Data Strategy Section */}
-          <div className="glass-panel" style={{ width: '100%', padding: '2rem', marginTop: '2rem', background: 'rgba(255,255,255,0.01)' }}>
+          <div className="glass-panel" style={{ width: '100%', padding: '2rem', marginTop: '2rem', background: 'var(--card-bg)' }}>
             <div className="gradient-text" style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'center' }}>STRATEGIC DATA OPS</div>
             <h3 style={{ textAlign: 'center', margin: '0.5rem 0 1.5rem' }}>Training & Annotation Strategy</h3>
 
@@ -539,7 +573,7 @@ const HomeView = ({ onStart }: { onStart: () => void }) => (
                 <h4 style={{ color: 'var(--secondary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <Shield size={16} /> Dataset Sources
                 </h4>
-                <ul style={{ fontSize: '0.85rem', color: '#aaa', paddingLeft: '1.2rem', lineHeight: '1.8' }}>
+                <ul style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', paddingLeft: '1.2rem', lineHeight: '1.8' }}>
                   <li><strong>AMI Meeting Corpus:</strong> 100 hours of meeting recordings & transcripts.</li>
                   <li><strong>ICSI Meeting Corpus:</strong> 75 hours of academic meeting data.</li>
                   <li><strong>Custom Annotation:</strong> 200–300 manually verified meeting snippets.</li>
@@ -550,38 +584,38 @@ const HomeView = ({ onStart }: { onStart: () => void }) => (
                 <h4 style={{ color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <ClipboardList size={16} /> Annotation Format
                 </h4>
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '12px', fontSize: '0.75rem', fontFamily: 'monospace', color: '#888' }}>
-                  <div style={{ marginBottom: '0.5rem', color: '#ccc' }}>// Example Structure</div>
+                <div style={{ background: 'var(--border-subtle)', padding: '1rem', borderRadius: '12px', fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>
+                  <div style={{ marginBottom: '0.5rem', color: 'var(--text-muted)' }}>// Example Structure</div>
                   <span style={{ color: 'var(--primary)' }}>"Rahul will prepare slides by Friday"</span><br />
-                  <span style={{ color: '#aaa' }}>- Task:</span> prepare slides<br />
-                  <span style={{ color: '#aaa' }}>- Owner:</span> Rahul<br />
-                  <span style={{ color: '#aaa' }}>- Deadline:</span> Friday
+                  <span style={{ color: 'var(--text-muted)' }}>- Task:</span> prepare slides<br />
+                  <span style={{ color: 'var(--text-muted)' }}>- Owner:</span> Rahul<br />
+                  <span style={{ color: 'var(--text-muted)' }}>- Deadline:</span> Friday
                 </div>
               </div>
             </div>
           </div>
           {/* Evaluation Metrics Section */}
-          <div className="glass-panel" style={{ width: '100%', padding: '2rem', marginTop: '2rem', border: '1px solid rgba(68, 255, 170, 0.2)' }}>
+          <div className="glass-panel" style={{ width: '100%', padding: '2rem', marginTop: '2rem', border: '1px solid var(--border-subtle)' }}>
             <div className="gradient-text" style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'center' }}>ACADEMIC RIGOR</div>
             <h3 style={{ textAlign: 'center', margin: '0.5rem 0 2rem' }}>Model Performance Metrics</h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
+              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--card-bg)', borderRadius: '16px' }}>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '0.5rem' }}>P / R / F1</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ccc' }}>Classification Quality</div>
-                <p style={{ fontSize: '0.75rem', color: '#888', marginTop: '0.5rem' }}>Measures detection accuracy, coverage, and harmonic mean.</p>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Classification Quality</div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Measures detection accuracy, coverage, and harmonic mean.</p>
               </div>
 
-              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
+              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--card-bg)', borderRadius: '16px' }}>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--secondary)', marginBottom: '0.5rem' }}>EMA</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ccc' }}>Exact Match Accuracy</div>
-                <p style={{ fontSize: '0.75rem', color: '#888', marginTop: '0.5rem' }}>Strict verification of task-owner-deadline triplets.</p>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Exact Match Accuracy</div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Strict verification of task-owner-deadline triplets.</p>
               </div>
 
-              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
+              <div style={{ textAlign: 'center', padding: '1.5rem', background: 'var(--card-bg)', borderRadius: '16px' }}>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ff4444', marginBottom: '0.5rem' }}>Token-F1</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ccc' }}>Entity Extraction</div>
-                <p style={{ fontSize: '0.75rem', color: '#888', marginTop: '0.5rem' }}>Precision of NER token spans for Names and Dates.</p>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Entity Extraction</div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>Precision of NER token spans for Names and Dates.</p>
               </div>
             </div>
           </div>
@@ -734,6 +768,15 @@ function App() {
   const [summary, setSummary] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<any[]>([]);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+  }, [theme]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -795,11 +838,13 @@ function App() {
     <div className="app-root">
       <div className="blob blob-1" />
       <div className="blob blob-2" />
-      <Navbar activeView={activeView} setActiveView={setActiveView} />
+      <div className="blob blob-3" />
+      <Navbar activeView={activeView} setActiveView={setActiveView} theme={theme} />
       <main style={{ minHeight: '80vh', paddingBottom: '4rem' }}>
         <AnimatePresence mode="wait">
-          {activeView === 'home' && <HomeView key="home" onStart={() => setActiveView('tool')} />}
+          {activeView === 'home' && <HomeView key="home" onStart={() => setActiveView('tool')} theme={theme} />}
           {activeView === 'guide' && <HowToUseView key="guide" />}
+          {activeView === 'backend' && <BackEndWorksView key="backend" />}
           {activeView === 'tool' && (
             <ExtractorView
               key="tool"
@@ -818,20 +863,32 @@ function App() {
           )}
           {activeView === 'contact' && <ContactView key="contact" />}
           {activeView === 'settings' && (
-            <SettingsView key="settings" apiKey={apiKey} setApiKey={setApiKey} selectedModel={selectedModel} setSelectedModel={setSelectedModel} useMockMode={useMockMode} setUseMockMode={setUseMockMode} customModel={customModel} setCustomModel={setCustomModel} />
+            <SettingsView
+              key="settings"
+              apiKey={apiKey}
+              setApiKey={setApiKey}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              useMockMode={useMockMode}
+              setUseMockMode={setUseMockMode}
+              customModel={customModel}
+              setCustomModel={setCustomModel}
+              theme={theme}
+              setTheme={setTheme}
+            />
           )}
         </AnimatePresence>
       </main>
-      <footer className="container" style={{ padding: '4rem 0 2rem', borderTop: '1px solid var(--glass-border)', opacity: 0.6, textAlign: 'center' }}>
+      <footer className="container footer" style={{ padding: '4rem 0 2rem', borderTop: '1px solid var(--glass-border)', opacity: 0.6, textAlign: 'center' }}>
         <div className="flex-center" style={{ gap: '2rem', marginBottom: '1.5rem' }}>
-          <Logo size={28} className="text-primary" />
+          <Logo size={28} className="text-primary" theme={theme} />
           <nav style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem' }}>
-            <span onClick={() => setActiveView('home')} style={{ cursor: 'pointer' }}>Home</span>
-            <span onClick={() => setActiveView('tool')} style={{ cursor: 'pointer' }}>Tool</span>
-            <span onClick={() => setActiveView('contact')} style={{ cursor: 'pointer' }}>Contact</span>
+            <span onClick={() => setActiveView('home')} style={{ cursor: 'pointer', color: 'var(--text-primary)' }}>Home</span>
+            <span onClick={() => setActiveView('tool')} style={{ cursor: 'pointer', color: 'var(--text-primary)' }}>Tool</span>
+            <span onClick={() => setActiveView('contact')} style={{ cursor: 'pointer', color: 'var(--text-primary)' }}>Contact</span>
           </nav>
         </div>
-        <p style={{ fontSize: '0.85rem' }}>© 2026 Zerion AI System • Powered by Google Gemini</p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>© 2026 Zerion AI System • Powered by Google Gemini</p>
       </footer>
     </div>
   );
