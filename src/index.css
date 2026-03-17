@@ -302,6 +302,21 @@ h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; }
   border-color: var(--primary);
 }
 
+.btn-link {
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.btn-link:hover {
+  color: var(--primary);
+  background: transparent;
+}
+
 /* Hero Section */
 .hero {
   min-height: calc(100vh - 5rem);
